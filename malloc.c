@@ -74,7 +74,7 @@ t_blk		*find_free_block(t_heap_type type, size_t size)
 	if (g_heap == NULL)
 	{
 		g_heap = create_heap(NULL, size);
-		return (g_heap->start);
+		return (g_heap->start);  // defined NULL
 	}
 	heap = g_heap;
 	while (heap)
@@ -84,14 +84,14 @@ t_blk		*find_free_block(t_heap_type type, size_t size)
 			if ((blk = scrolling_blocks(heap->start, size)) == NULL)
 			{
 				heap = create_heap(heap, size);
-				return (heap->start);
+				return (heap->start); // defined NULL
 			}
 			return (blk);
 		}
 		if (heap->next == NULL)
 		{
 			heap = create_heap(heap, size);
-			return (heap->start);
+			return (heap->start); // defined NULL
 		}
 		heap = heap->next;
 	}
@@ -102,6 +102,8 @@ void		*allocation_block(t_blk *blk, size_t size)
 {
 	t_blk	*new_blk;
 
+	if (blk == NULL)
+		return (NULL);
 	new_blk = blk->data + size;
 	new_blk->data = blk->data + size + BLK_SIZE;
 	new_blk->is_free = TRUE;
