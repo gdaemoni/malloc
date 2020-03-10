@@ -1,41 +1,4 @@
-#include <assert.h>
-#include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <stdio.h>
-
-typedef enum s_bool {FALSE, TRUE} t_bool;
-typedef enum s_heap_type {NUL, TYNY, SMALL, LARGE} t_heap_type;
-
-void	hex_dump(const void *addr, const size_t size);
-
-
-typedef struct 		s_blk
-{
-	struct s_blk	*next;
-	struct s_blk	*pre;
-	void			*data;
-	size_t			size;
-	t_bool			is_free;
-}					t_blk;
-
-typedef struct		s_heap
-{
-	struct s_heap	*next;
-	struct s_heap	*pre;
-	t_blk			*start;
-	t_heap_type		type;
-}					t_heap;
-
-static t_heap		*g_heap;
-
-#define TINY_SIZE	((size_t)getpagesize())
-#define SMALL_SIZE	((size_t)getpagesize() * 8)
-#define BLK_SIZE	(sizeof(t_blk))
-#define HEAP_SIZE	(sizeof(t_heap))
-#define TYNY_MAX_ALLOC (128)
-#define SMALL_MAX_ALLOC (1024)
+#include "malloc.h"
 
 size_t		get_heap_size(size_t size)
 {
@@ -63,6 +26,7 @@ t_heap		*init_heap(t_heap *pre_heap, void *addr, size_t size_heap, size_t size)
 	new_heap->start = (t_blk*)(addr + HEAP_SIZE);
 	new_heap->type = get_heap_type(size);
 	new_heap->next = NULL;
+	new_heap->size = size_heap;
 	if (pre_heap != NULL)
 	{
 		new_heap->pre = pre_heap;
@@ -160,19 +124,7 @@ void		*malloc(size_t size)
 	return (allocation_block(blk, size));
 }
 
-void		free(void *addr)
-{
-	t_blk	*blk;
-	t_blk	*blk_pre;
 
-	blk = addr - BLK_SIZE;
-	blk->is_free = TRUE;
-	blk_pre = blk->pre;
-	if (blk_pre != NULL && blk_pre->is_free)
-	{
-		
-	}
-}
 
 int main()
 {
@@ -180,20 +132,31 @@ int main()
 	char *str1;
 	char *str2;
 	char *str3;
+	char *str4;
 
 	str0 = (char*)malloc(32);
 	str1 = (char*)malloc(32);
 	str2 = (char*)malloc(32);
 	str3 = (char*)malloc(32);
+	str4 = (char*)malloc(32);
+	print_alloc_mem(g_heap);
 	free(str0);
+	print_alloc_mem(g_heap);
+	free(str2);
+	print_alloc_mem(g_heap);
 	free(str1);
+	print_alloc_mem(g_heap);
+	free(str3);
+	print_alloc_mem(g_heap);
+	free(str4);
+	print_alloc_mem(g_heap);
 	memset(str0, 'A', 31);
 	memset(str1, 'B', 31);
 	memset(str2, 'C', 31);
 	memset(str3, 'D', 31);
-	hex_dump(g_heap, 400);
-	printf("\n");
-	hex_dump(g_heap->next, 400);
+	// hex_dump(g_heap, 400);
+	// printf("\n");
+	// hex_dump(g_heap->next, 400);
 
 	return (0);
 }
