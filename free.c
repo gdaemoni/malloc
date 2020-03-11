@@ -55,14 +55,14 @@ void		free(void *addr)
 	blk_pre = blk->pre;
 	if (blk_pre != NULL && blk_pre->is_free)
 	{
-		blk_pre->size += blk->size;
+		blk_pre->size += blk->size + BLK_SIZE;
 		blk_pre->next = blk->next;
 		blk_pre->next->pre = blk_pre;
 		blk = blk_pre;
 	}
 	if (blk->next != NULL && blk->next->is_free)
 	{
-		blk->size += blk->next->size;
+		blk->size += blk->next->size + BLK_SIZE;
 		blk->next = blk->next->next;
 		if (blk->next != NULL)
 			blk->next->pre = blk;

@@ -104,10 +104,15 @@ void		*allocation_block(t_blk *blk, size_t size)
 
 	if (blk == NULL)
 		return (NULL);
+	if (blk->next != NULL)
+	{
+		blk->is_free = FALSE;
+		return (blk->data);
+	}
 	new_blk = blk->data + size;
 	new_blk->data = blk->data + size + BLK_SIZE;
 	new_blk->is_free = TRUE;
-	new_blk->size = blk->size - size;
+	new_blk->size = blk->size - size - BLK_SIZE;
 	new_blk->pre = blk;
 	new_blk->next = NULL;
 	blk->size = size;
@@ -128,37 +133,58 @@ void		*malloc(size_t size)
 
 
 
+#define M (1024 * 1024)
+
+void print(char *s)
+{
+	write(1, s, strlen(s));
+}
+
 int main()
 {
-	char *str0;
-	char *str1;
-	char *str2;
-	char *str3;
-	char *str4;
+	char *addr1;
+	char *addr2;
+	char *addr3;
 
-	str0 = (char*)malloc(32);
-	str1 = (char*)malloc(32);
-	str2 = (char*)malloc(32);
-	str3 = (char*)malloc(32);
-	str4 = (char*)malloc(32);
-	print_alloc_mem(g_heap);
-	free(str0);
-	print_alloc_mem(g_heap);
-	free(str2);
-	print_alloc_mem(g_heap);
-	free(str1);
-	print_alloc_mem(g_heap);
-	free(str3);
-	print_alloc_mem(g_heap);
-	free(str4);
-	print_alloc_mem(g_heap);
-	memset(str0, 'A', 31);
-	memset(str1, 'B', 31);
-	memset(str2, 'C', 31);
-	memset(str3, 'D', 31);
+	addr1 = (char*)malloc(16*M);
+	strcpy(addr1, "Bonjours\n");
+	print(addr1);
+	addr2 = (char*)malloc(16*M);
+	addr3 = (char*)realloc(addr1, 128*M);
+	addr3[127*M] = 42;
+	print(addr3);
+	// char *str0;
+	// char *str1;
+	// char *str2;
+	// char *str3;
+	// char *str4;
+
+	// str0 = (char*)malloc(32);
+	// str1 = (char*)malloc(32);
+	// str2 = (char*)malloc(32);
+	// str3 = (char*)malloc(32);
+	// str4 = (char*)malloc(32);
+	// print_alloc_mem(g_heap);
+	// free(str1);
+	// print_alloc_mem(g_heap);
+	// str0 = realloc(str0, 100);
+	// print_alloc_mem(g_heap);
+	// str0 = realloc(str0, 106);
+	// print_alloc_mem(g_heap);
+	// str0 = realloc(str0, 107);
+	// print_alloc_mem(g_heap);
+	// str0 = realloc(str0, 3616);
+	// print_alloc_mem(g_heap);
+	// char *str5 = (char*)malloc(75);
+	// print_alloc_mem(g_heap);
+	// memset(str0, 'A', 31);
+	// memset(str1, 'B', 31);
+	// memset(str2, 'C', 31);
+	// memset(str3, 'D', 31);
 	// hex_dump(g_heap, 400);
 	// printf("\n");
 	// hex_dump(g_heap->next, 400);
 
 	return (0);
 }
+// b1b8

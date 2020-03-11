@@ -63,11 +63,11 @@ void	print_alloc_mem(const t_heap *heap)
 	i = 0;
 	while (heap)
 	{
-		printf("HEAP N%d  addr %p\n", i++, heap);
+		printf("TYPE_HEAP %d  addr %p\n",heap->type, heap);
 		blk = heap->start;
 		while (blk)
 		{
-			printf("%p %s S%zu]  ", blk, (blk->is_free ? str1 : str0), blk->size);
+			printf("%p %s S %zu]  ", blk, (blk->is_free ? str1 : str0), blk->size);
 			blk = blk->next;
 		}
 		heap = heap->next;

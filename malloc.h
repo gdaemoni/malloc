@@ -44,7 +44,7 @@ typedef struct		s_heap
 	t_heap_type		type;
 }					t_heap;
 
-static t_heap		*g_heap;
+t_heap				*g_heap;
 
 void				free(void* addr);
 
