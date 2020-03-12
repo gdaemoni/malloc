@@ -6,16 +6,17 @@
 /*   By: gdaemoni <gdaemoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 13:53:06 by gdaemoni          #+#    #+#             */
-/*   Updated: 2020/03/07 19:16:20 by gdaemoni         ###   ########.fr       */
+/*   Updated: 2020/03/12 20:46:05 by gdaemoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "malloc.h"
+#include "ft_io.h"
 
 void	hex_dump(const void *addr, size_t size)
 {
-	int				i;
+	size_t			i;
 	unsigned char	buff[17];
 	unsigned char*	ptr;
 	
@@ -30,25 +31,12 @@ void	hex_dump(const void *addr, size_t size)
 			printf("%p ", &(ptr[i]));
 		}
 		if ((i % 2) && i > 0)
-			printf("  %02x%02x", ptr[i - 1], ptr[i]);
+			printf("  %02x %02x", ptr[i - 1], ptr[i]);
 		if (ptr[i] < 32 || ptr[i] > 126)
 			buff[i % 16] = '.';
 		else
 			buff[i % 16] = ptr[i];
 		buff[(i % 16) + 1] = 0;
-	}
-	printf("\n");
-}
-
-void	print_bloks(const t_blk *blk)
-{
-	char	*str0 = "|||||||||||||||";
-	char	*str1 = "...............";
-
-	while (blk)
-	{
-		printf("%p %s S%zu]  ", blk, (blk->is_free ? str1 : str0), blk->size);
-		blk = blk->next;
 	}
 	printf("\n");
 }
@@ -59,16 +47,26 @@ void	print_alloc_mem(const t_heap *heap)
 	char	*str1 = "...............";
 	t_blk	*blk;
 	int		i;
+	int		c;
 
 	i = 0;
 	while (heap)
 	{
+		c = 0;
 		printf("TYPE_HEAP %d  addr %p\n",heap->type, heap);
 		blk = heap->start;
 		while (blk)
 		{
-			printf("%p %s S %zu]  ", blk, (blk->is_free ? str1 : str0), blk->size);
+			printf("[%p %s S %9zu] ", blk, (blk->is_free ? str1 : str0), blk->size);
 			blk = blk->next;
+			if (blk->next == NULL)
+			{
+				printf("[%p %s S %9zu]\n", blk, (blk->is_free ? str1 : str0), blk->size - BLK_SIZE);
+				break;
+			}
+			c += 42;
+			if (c % 210 == 0)
+				printf("\n");
 		}
 		heap = heap->next;
 		printf("\n");

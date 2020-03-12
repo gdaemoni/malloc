@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gdaemoni <gdaemoni@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/03/12 17:10:28 by gdaemoni          #+#    #+#             */
+/*   Updated: 2020/03/12 20:35:03 by gdaemoni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "malloc.h"
 
-void		*re_allocation_here(t_blk *blk, t_blk *next, size_t size)
+static void		*re_allocation_here(t_blk *blk, t_blk *next, size_t size)
 {
 	t_blk			*new_blk;
 
@@ -24,27 +36,27 @@ void		*re_allocation_here(t_blk *blk, t_blk *next, size_t size)
 	return (blk->data);
 }
 
-void		*re_allocation_move(t_blk *blk, size_t size)
+static void		*re_allocation_move(t_blk *blk, size_t size)
 {
 	void	*ptr;
 
 	ptr = malloc(size);
-	memmove(ptr, blk->data, blk->size);
 	free(blk->data);
-	return (ptr);
+	return (ft_memcpy(ptr, blk->data, blk->size));
 }
-void		*realloc(void *addr, size_t size)
+
+void			*realloc(void *addr, size_t size)
 {
 	t_blk	*blk;
 	t_blk	*next_blk;
 
-	blk = GET_BLOCK(addr);
 	if (size == 0)
 	{
 		free(addr);
 		return (NULL);
 	}
-	if (addr == NULL)
+	blk = GET_BLOCK(addr);
+	if (!(is_our_blok(blk)))
 		return (malloc(size));
 	if (blk->size >= size)
 		return (addr);

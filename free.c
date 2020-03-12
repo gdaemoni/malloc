@@ -1,12 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gdaemoni <gdaemoni@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/03/12 20:28:10 by gdaemoni          #+#    #+#             */
+/*   Updated: 2020/03/12 21:29:10 by gdaemoni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "malloc.h"
 
-void		free_heap(t_blk *blk)
+void		free_all()
+{
+	
+}
+
+static void	free_heap(t_blk *blk)
 {
 	t_heap *heap;
+	t_heap *pre_heap;
 
 	if (blk->pre == NULL && blk->next == NULL)
 	{
-		heap = (t_heap*)blk - HEAP_SIZE;
+		heap = (void*)blk - HEAP_SIZE;
+		if (heap->pre)
+		{
+			pre_heap = heap->pre;
+			pre_heap->next = heap->next;
+		}
 		munmap(heap, heap->size);
 	}
 }
@@ -21,24 +44,6 @@ t_bool		check_blk(t_heap *heap, t_blk *blk)
 		if (actual_blk == blk)
 			return (TRUE);
 		actual_blk = actual_blk->next;
-	}
-	return (FALSE);
-}
-
-t_bool		is_our_blok(void *addr)
-{
-	t_heap	*heap;
-	void	*first_addr;
-	void	*last_addr;
-	
-	heap = g_heap;
-	while (heap)
-	{
-		first_addr = (void*)heap;
-		last_addr = (void*)heap + heap->size;
-		if (addr > first_addr && addr < last_addr)
-			return (check_blk(heap, GET_BLOCK(addr)));
-		heap = heap->next;
 	}
 	return (FALSE);
 }

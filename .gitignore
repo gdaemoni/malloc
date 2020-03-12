@@ -1,0 +1,8 @@
+*.o
+*.a
+a.out*
+test.c
+main.c
+.vscode
+.DS_Store
+.clion
