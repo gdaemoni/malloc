@@ -55,9 +55,9 @@ void			*realloc(void *addr, size_t size)
 		free(addr);
 		return (NULL);
 	}
-	blk = GET_BLOCK(addr);
-	if (!(is_our_blok(blk)))
+	if (!(is_our_blok(addr)))
 		return (malloc(size));
+	blk = GET_BLOCK(addr);
 	if (blk->size >= size)
 		return (addr);
 	next_blk = blk->next;

@@ -12,8 +12,6 @@
 
 #include "malloc.h"
 
-static t_heap	*g_heap;
-
 static t_blk	*find_free_block(t_heap_type type, size_t size)
 {
 	t_heap	*heap;
@@ -74,27 +72,14 @@ void			*malloc(size_t size)
 	return (allocation_block(blk, size));
 }
 
-void	test2(t_heap *heap, size_t count, size_t size)
-{
-	size_t		i;
-	char		*str;
-	
-	i = 0;
-	while (i < count)
-	{
-		str = malloc(size);
-		i++;
-	}
-	print_alloc_mem(heap);
-	printf("TEST 2 count = %zu size = %zu\n", count, size);
-}
-
 int 			main()
 {
-	size_t n = 100;
-	test2(g_heap, 100, n);
-	test2(g_heap, 1000, n);
-	test2(g_heap, 10000, n);
-	test2(g_heap, 100000, n);
+	char *ch = (char*)malloc(1);
+	free(ch);
+	char *str = malloc(100);
+	free(str);
+
+	str = malloc(15);
+	// print_alloc_mem(g_heap)
 	return (0);
 }

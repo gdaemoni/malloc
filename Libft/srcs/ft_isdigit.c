@@ -31,7 +31,7 @@ int			ft_str_isnumeric(const char *str, int base)
 	while (str[i])
 	{
 		ptr = ft_strchr("00112233445566778899AaBbCcDdEeFf", str[i]);
-		a = (int)ptr - (int)str;
+		a = ptr - str;
 		if (a >= base)
 			return (0);
 		++i;

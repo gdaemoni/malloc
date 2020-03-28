@@ -57,16 +57,17 @@ void	print_alloc_mem(const t_heap *heap)
 		blk = heap->start;
 		while (blk)
 		{
-			printf("[%p %s S %9zu] ", blk, (blk->is_free ? str1 : str0), blk->size);
+			printf("[%p %s S %6zu] ", blk, (blk->is_free ? str1 : str0), blk->size);
 			blk = blk->next;
+			c += 42;
+			if (c % 168 == 0)
+				printf("\n");
 			if (blk->next == NULL)
 			{
-				printf("[%p %s S %9zu]\n", blk, (blk->is_free ? str1 : str0), blk->size - BLK_SIZE);
+				printf("[%p %s S %6zu]\n", blk, (blk->is_free ? str1 : str0),\
+				blk->size < 40 ? 0 : blk->size - BLK_SIZE);
 				break;
 			}
-			c += 42;
-			if (c % 210 == 0)
-				printf("\n");
 		}
 		heap = heap->next;
 		printf("\n");

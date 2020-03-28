@@ -38,7 +38,6 @@ typedef enum		e_bool
 
 typedef enum		e_heap_type
 {
-	NUL,
 	TYNY,
 	SMALL,
 	LARGE
@@ -61,6 +60,8 @@ typedef struct		s_heap
 	size_t			size;
 	t_heap_type		type;
 }					t_heap;
+
+t_heap				*g_heap;
 
 void				*malloc(size_t size);
 void				*realloc(void *addr, size_t size);

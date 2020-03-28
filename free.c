@@ -12,11 +12,6 @@
 
 #include "malloc.h"
 
-void		free_all()
-{
-	
-}
-
 static void	free_heap(t_blk *blk)
 {
 	t_heap *heap;
@@ -29,7 +24,11 @@ static void	free_heap(t_blk *blk)
 		{
 			pre_heap = heap->pre;
 			pre_heap->next = heap->next;
+			if (heap->next)
+				heap->next->pre = pre_heap;
 		}
+		else
+			g_heap = NULL;
 		munmap(heap, heap->size);
 	}
 }
